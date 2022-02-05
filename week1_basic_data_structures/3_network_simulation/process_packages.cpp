@@ -1,74 +1,53 @@
-#include <iostream>
-#include <queue>
-#include <vector>
-
-struct Request {
-    Request(int arrival_time, int process_time):
-        arrival_time(arrival_time),
-        process_time(process_time)
-    {}
-
-    int arrival_time;
-    int process_time;
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long int ll;
+ll n,size_of_buffer;
+struct entry
+{
+    ll arrival_time;
+    ll process_time;
 };
-
-struct Response {
-    Response(bool dropped, int start_time):
-        dropped(dropped),
-        start_time(start_time)
-    {}
-
-    bool dropped;
-    int start_time;
-};
-
-class Buffer {
-public:
-    Buffer(int size):
-        size_(size),
-        finish_time_()
-    {}
-
-    Response Process(const Request &request) {
-        // write your code here
+queue<ll> end_time;
+ll calculating(ll arrival,ll process)
+{
+    while(!end_time.empty())
+    {
+        if(end_time.front()<=arrival)
+        end_time.pop();
+        else
+        break;
     }
-private:
-    int size_;
-    std::queue <int> finish_time_;
-};
-
-std::vector <Request> ReadRequests() {
-    std::vector <Request> requests;
-    int count;
-    std::cin >> count;
-    for (int i = 0; i < count; ++i) {
-        int arrival_time, process_time;
-        std::cin >> arrival_time >> process_time;
-        requests.push_back(Request(arrival_time, process_time));
+    if(end_time.empty())    
+    {
+        end_time.push(arrival+process);
+        return(arrival);
     }
-    return requests;
+    if(end_time.size()==size_of_buffer)    
+    {
+        return(-1);
+    }    
+    ll last=end_time.back();    
+    end_time.push(last+process);
+    return(last);
 }
-
-std::vector <Response> ProcessRequests(const std::vector <Request> &requests, Buffer *buffer) {
-    std::vector <Response> responses;
-    for (int i = 0; i < requests.size(); ++i)
-        responses.push_back(buffer->Process(requests[i]));
-    return responses;
-}
-
-void PrintResponses(const std::vector <Response> &responses) {
-    for (int i = 0; i < responses.size(); ++i)
-        std::cout << (responses[i].dropped ? -1 : responses[i].start_time) << std::endl;
-}
-
-int main() {
-    int size;
-    std::cin >> size;
-    std::vector <Request> requests = ReadRequests();
-
-    Buffer buffer(size);
-    std::vector <Response> responses = ProcessRequests(requests, &buffer);
-
-    PrintResponses(responses);
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    ll i;
+    cin>>size_of_buffer;
+    cin>>n;
+    ll ans[n];
+    struct entry e[n];
+    for(i=0;i<n;i++)
+    {
+        cin>>e[i].arrival_time>>e[i].process_time;
+    }
+    for(i=0;i<n;i++)
+    {
+        ans[i]=calculating(e[i].arrival_time,e[i].process_time);
+        cout<<ans[i]<<endl;
+    }
     return 0;
 }
