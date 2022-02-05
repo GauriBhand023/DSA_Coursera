@@ -1,36 +1,38 @@
-#include <iostream>
-#include <vector>
-
-using std::cin;
-using std::cout;
-using std::vector;
-using std::max;
-
-void max_sliding_window_naive(vector<int> const & A, int w) {
-    for (size_t i = 0; i < A.size() - w + 1; ++i) {
-        int window_max = A.at(i);
-        for (size_t j = i + 1; j < i + w; ++j)
-            window_max = max(window_max, A.at(j));
-
-        cout << window_max << " ";
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long int ll;
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    ll number_of_elements,i,k;
+    cin>>number_of_elements;
+    ll a[number_of_elements];
+    for(i=0;i<number_of_elements;i++)
+    {
+        cin>>a[i];
     }
-
-    return;
-}
-
-
-int main() {
-    int n = 0;
-    cin >> n;
-
-    vector<int> A(n);
-    for (size_t i = 0; i < n; ++i)
-        cin >> A.at(i);
-
-    int w = 0;
-    cin >> w;
-
-    max_sliding_window_naive(A, w);
-
+    cin>>k;
+    vector<ll> answer;
+    deque<ll> q;
+    for(i=0;i<number_of_elements;i++)
+    {
+        if(i>=k)
+        {
+            answer.push_back(a[q.front()]);
+            while((!q.empty()) && (q.front()<=i-k))
+            q.pop_front();
+        }
+        while((!q.empty()) && (a[q.back()]<=a[i]))
+        q.pop_back();
+        q.push_back(i);
+    }
+    answer.push_back(a[q.front()]);
+    for(i=0;i<answer.size();i++)
+    {
+        cout<<answer[i]<<" ";
+    }
+    cout<<endl;
     return 0;
 }
